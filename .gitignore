@@ -1,0 +1,20 @@
+# ملفات VS
+.vs/
+*.suo
+*.user
+*.vcxproj.user
+
+# ملفات البناء
+Debug/
+Release/
+x64/
+*.exe
+*.obj
+*.o
+*.out
+
+# ملفات مؤقتة
+*.log
+*.ilk
+*.pdb
+*.idb
