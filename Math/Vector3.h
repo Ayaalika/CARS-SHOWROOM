@@ -18,6 +18,10 @@ public:
         return Vector3(x * scalar, y * scalar, z * scalar);
     }
 
+    Vector3 operator-() const {
+        return Vector3(-x, -y, -z);
+    }
+
    Vector3 cross(const Vector3& other) const {
         return Vector3(y * other.z - z * other.y,
                        z * other.x - x * other.z,

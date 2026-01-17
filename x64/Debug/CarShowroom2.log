@@ -1,3 +1,0 @@
-﻿  Room.cpp
-C:\Users\Laptop Syria\Source\Repos\CarShowroom2\CarShowroom2\Scene\Room.cpp(177,24): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-  CarShowroom2.vcxproj -> C:\Users\Laptop Syria\Source\Repos\CarShowroom2\x64\Debug\CarShowroom2.exe

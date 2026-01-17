@@ -22,6 +22,7 @@ public:
     void updateDoorState(const Vector3& cameraPosition);
     void draw();
 
+    void update(float deltaTime);
 private:
     Vector3 m_position;
 
@@ -58,7 +59,7 @@ private:
     std::vector<tinyobj::shape_t> lamppostShapes;
     std::vector<tinyobj::material_t> lamppostMaterials;
     std::map<std::string, GLuint> m_textureMap;
-    // Чслбн
+ 
     SportCarRoom* sportCarRoom;
     FamilyCarRoom* familyCarRoom;
     ClassicCarRoom* classicCarRoom;

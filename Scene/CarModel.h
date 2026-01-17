@@ -9,11 +9,20 @@
 #include "../tiny_obj_loader.h"
 #include "../Math/Vector3.h" 
 
-
 struct DrawCall {
     GLuint textureID;
-    size_t startIndex; 
-    size_t count;      
+    int materialID;
+    size_t startIndex;
+    size_t count;
+};
+
+struct Material {
+    std::string name;
+    float diffuse[4];
+    float ambient[4];
+    float specular[4];
+    float shininess;
+    float alpha;
 };
 
 class CarModel {
@@ -30,12 +39,13 @@ public:
     void setScale(float scale);
 
     bool isModelLoaded() const { return isLoaded; }
-
+    void setYScaleMultiplier(float multiplier);
 private:
     std::string m_modelPath;
     Vector3 m_position;
     float m_rotation;
     float m_scale;
+    bool isLoaded;
 
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
@@ -46,14 +56,18 @@ private:
     std::vector<float> m_texCoords;
     std::vector<GLuint> m_indices;
 
-    std::vector<DrawCall> m_drawCalls;
+    std::vector<Material> m_materials; 
+    std::vector<DrawCall> m_drawCalls; 
 
+    std::map<std::string, GLuint> textures;
     std::future<bool> loadFuture;
 
-    bool isLoaded;
-    std::map<std::string, GLuint> textures;
 
-    bool loadModel(const std::string& filename); 
+    Vector3 m_minBounds, m_maxBounds;
+    float m_yScaleMultiplier;
+
+    bool loadModel(const std::string& filename);
     void setupMesh();
     GLuint loadTexture(const char* filepath);
+    void calculateDimensions();
 };

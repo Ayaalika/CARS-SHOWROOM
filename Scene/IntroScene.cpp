@@ -61,6 +61,8 @@ void IntroScene::update(float deltaTime) {
     if (m_keys['a'] || m_keys['A']) m_camera.ProcessKeyboard(2, deltaTime);
     if (m_keys['d'] || m_keys['D']) m_camera.ProcessKeyboard(3, deltaTime);
     if (m_showroom) m_showroom->updateDoorState(m_camera.Position);
+    
+    if (m_showroom) m_showroom->update(deltaTime);
 }
 
 void IntroScene::render() {

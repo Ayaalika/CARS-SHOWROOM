@@ -21,12 +21,13 @@ m_scaleFactor(2.0f), archDisplayList(0), lamppostDisplayList(0) {
     m_buildingWidth = 10.0f;
     m_buildingLength = 12.0f;
 
-    m_corridorWidth = 2.5f; 
+    m_wallGap = 0.05f;
+    m_corridorWidth = 1.7f; 
     float availableRoomWidth = m_buildingWidth - m_corridorWidth - (3 * m_wallGap);
     float availableRoomDepth = m_buildingLength - (3 * m_wallGap);
     m_roomWidth = availableRoomWidth / 2.0f;
     m_roomDepth = availableRoomDepth / 2.0f;
-    m_wallGap = 0.05f; 
+    
 
     roomCoords[0][0] = -m_buildingWidth / 2 + m_wallGap; 
     roomCoords[0][1] = -m_buildingLength / 2 + m_wallGap;
@@ -247,10 +248,12 @@ void Showroom::draw() {
     drawNeonSign();
     glPopMatrix();
     glPushMatrix();
-    //glScalef(m_scaleFactor, 1.0f, m_scaleFactor);
-   glScalef(m_scaleFactor * 1.95, 1.0f, m_scaleFactor * 1.95);
+   glMatrixMode(GL_MODELVIEW);
     for (Room* room : rooms) {
+        glPushMatrix();
+        glScalef(m_scaleFactor, 1.0f, m_scaleFactor);
         room->draw();
+        glPopMatrix();
     }
     glPopMatrix();
     glColor3f(0.15f, 0.15f, 0.15f);
@@ -431,7 +434,7 @@ void Showroom::drawNeonSign() {
     glLineWidth(3.0f);
     glPushMatrix();
     glScalef(0.01f, 0.01f, 0.01f);
-    std::string text = "CAR SHOWROOM";
+    std::string text = "CARS SHOWROOM";
     float textWidth = 0;
     for (char c : text) {
         textWidth += glutStrokeWidth(GLUT_STROKE_ROMAN, c);
@@ -446,7 +449,7 @@ void Showroom::drawNeonSign() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glColor4f(0.8f, 0.8f, 1.0f, 0.3f * glowIntensity);
     glLineWidth(8.0f);
-    glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+    //glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
     glPushMatrix();
     glScalef(0.01f, 0.01f, 0.01f);
     glTranslatef(-textWidth / 2, 0.0f, 0.0f);
@@ -832,6 +835,13 @@ void Showroom::drawArch(float x, float y, float z, float scale) {
 }
 
 void Showroom::drawPillar(float x, float z, float h, float w) {
+    GLfloat pillar_ambient[] = { 0.15f, 0.15f, 0.15f, 1.0f };
+    GLfloat pillar_diffuse[] = { 0.15f, 0.15f, 0.15f, 1.0f };
+    GLfloat pillar_specular[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, pillar_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, pillar_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, pillar_specular);
+    
     float hw = w / 2.0f;
     glBegin(GL_QUADS);
     glNormal3f(0.0f, 0.0f, -1.0f);
@@ -1047,4 +1057,10 @@ void Showroom::drawSpotlightEffect(float x, float y, float z) {
     glDisable(GL_BLEND);
 
     glPopMatrix();
+}
+
+void Showroom::update(float deltaTime) {
+    for (Room* room : rooms) {
+        room->update(deltaTime);
+    }
 }

@@ -13,6 +13,7 @@ public:
 
 protected:
     virtual void drawRoomSpecifics() override;
+    void setNeonColors() override;
     virtual void getPlatformColor(GLfloat color[4]);
 
 private:

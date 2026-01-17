@@ -22,6 +22,9 @@ public:
     float getDepth() const { return m_depth; }
     float getHeight() const { return m_height; }
 
+    virtual void update(float deltaTime);
+    float getRotationSpeed() const { return rotationSpeed; }
+    void setRotationSpeed(float speed) { rotationSpeed = speed; }
 protected:
     Vector3 m_position;
     float m_width;
@@ -47,6 +50,15 @@ protected:
     virtual void drawRoomSpecifics() = 0;
 
     virtual void getPlatformColor(GLfloat color[4]) = 0;
+
+    float carRotation;   
+    float rotationSpeed;
+
+    GLfloat neonColor1[4]; 
+    GLfloat neonColor2[4];
+
+    void drawNeonCeiling();
+    virtual void setNeonColors() {};
 private:
     static const float DOOR_OPEN_DISTANCE;
     static const float DOOR_SPEED;

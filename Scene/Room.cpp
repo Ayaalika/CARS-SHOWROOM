@@ -8,6 +8,9 @@ const float Room::DOOR_SPEED = 0.05f;
 Room::Room(const Vector3& position, float width, float depth, float height)
     : m_position(position), m_width(width), m_depth(depth), m_height(height),
     doorPosition(0.0f), doorOpening(false), doorClosing(false) {
+    
+    carRotation = 0.0f;     
+    rotationSpeed = 20.0f;
 }
 
 Room::~Room() {
@@ -129,7 +132,7 @@ void Room::drawRoomBase() {
     glTexCoord2f(0.0f, 3.0f); glVertex3f(0.0f, m_height, m_depth);
     glEnd();
     glDisable(GL_TEXTURE_2D);
-
+    drawNeonCeiling();
     drawPlatform();
     drawGlassFacade(isLeftRoom);
     drawRoomSpecifics();
@@ -225,4 +228,87 @@ void Room::drawPlatform() {
     gluDisk(quadric, 0, PLATFORM_RADIUS, 32, 32);
     gluDeleteQuadric(quadric);
     glPopMatrix();
+}
+
+void Room::update(float deltaTime) {
+    carRotation += rotationSpeed * deltaTime;
+    if (carRotation > 360.0f) {
+        carRotation -= 360.0f;
+    }
+}
+
+void Room::drawNeonCeiling() {
+    setNeonColors();
+
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+    glDisable(GL_LIGHTING);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    const float neonWidth = 0.1f;
+    const float neonGap = 0.3f;
+    const float neonOffset = 0.2f;
+
+    for (float x = neonOffset; x < m_width - neonOffset; x += neonGap) {
+        glColor4f(neonColor1[0], neonColor1[1], neonColor1[2], 0.8f);
+        glBegin(GL_QUADS);
+        glVertex3f(x, m_height - 0.01f, neonOffset);
+        glVertex3f(x + neonWidth, m_height - 0.01f, neonOffset);
+        glVertex3f(x + neonWidth, m_height - 0.01f, m_depth - neonOffset);
+        glVertex3f(x, m_height - 0.01f, m_depth - neonOffset);
+        glEnd();
+
+        glColor4f(neonColor2[0], neonColor2[1], neonColor2[2], 0.8f);
+        glBegin(GL_QUADS);
+        glVertex3f(x + neonWidth / 2, m_height - 0.01f, neonOffset);
+        glVertex3f(x + neonWidth * 1.5f, m_height - 0.01f, neonOffset);
+        glVertex3f(x + neonWidth * 1.5f, m_height - 0.01f, m_depth - neonOffset);
+        glVertex3f(x + neonWidth / 2, m_height - 0.01f, m_depth - neonOffset);
+        glEnd();
+    }
+
+    for (float z = neonOffset; z < m_depth - neonOffset; z += neonGap) {
+        glColor4f(neonColor1[0], neonColor1[1], neonColor1[2], 0.8f);
+        glBegin(GL_QUADS);
+        glVertex3f(neonOffset, m_height - 0.01f, z);
+        glVertex3f(m_width - neonOffset, m_height - 0.01f, z);
+        glVertex3f(m_width - neonOffset, m_height - 0.01f, z + neonWidth);
+        glVertex3f(neonOffset, m_height - 0.01f, z + neonWidth);
+        glEnd();
+
+        glColor4f(neonColor2[0], neonColor2[1], neonColor2[2], 0.8f);
+        glBegin(GL_QUADS);
+        glVertex3f(neonOffset, m_height - 0.01f, z + neonWidth / 2);
+        glVertex3f(m_width - neonOffset, m_height - 0.01f, z + neonWidth / 2);
+        glVertex3f(m_width - neonOffset, m_height - 0.01f, z + neonWidth * 1.5f);
+        glVertex3f(neonOffset, m_height - 0.01f, z + neonWidth * 1.5f);
+        glEnd();
+    }
+
+    for (int i = 0; i < 2; i++) {
+        float glowSize = 0.05f * (i + 1);
+        float glowAlpha = 0.3f / (i + 1);
+
+        glColor4f(neonColor1[0], neonColor1[1], neonColor1[2], glowAlpha);
+        for (float x = neonOffset; x < m_width - neonOffset; x += neonGap) {
+            glBegin(GL_QUADS);
+            glVertex3f(x - glowSize, m_height - 0.01f - glowSize / 2, neonOffset);
+            glVertex3f(x + neonWidth + glowSize, m_height - 0.01f - glowSize / 2, neonOffset);
+            glVertex3f(x + neonWidth + glowSize, m_height - 0.01f - glowSize / 2, m_depth - neonOffset);
+            glVertex3f(x - glowSize, m_height - 0.01f - glowSize / 2, m_depth - neonOffset);
+            glEnd();
+        }
+
+        glColor4f(neonColor2[0], neonColor2[1], neonColor2[2], glowAlpha);
+        for (float z = neonOffset; z < m_depth - neonOffset; z += neonGap) {
+            glBegin(GL_QUADS);
+            glVertex3f(neonOffset, m_height - 0.01f - glowSize / 2, z - glowSize);
+            glVertex3f(m_width - neonOffset, m_height - 0.01f - glowSize / 2, z - glowSize);
+            glVertex3f(m_width - neonOffset, m_height - 0.01f - glowSize / 2, z + neonWidth + glowSize);
+            glVertex3f(neonOffset, m_height - 0.01f - glowSize / 2, z + neonWidth + glowSize);
+            glEnd();
+        }
+    }
+    glPopAttrib();
 }
