@@ -289,7 +289,7 @@ void Showroom::loadModels() {
         archDisplayList = createDisplayList(archAttrib, archShapes, archMaterials, 1.0f);
     }
     else {
-        std::cerr << "Failed to load arch model. Using procedural drawing." << std::endl;
+       //std::cerr << "Failed to load arch model. Using procedural drawing." << std::endl;
         archDisplayList = 0;
     }
 

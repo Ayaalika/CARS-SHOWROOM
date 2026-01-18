@@ -15,7 +15,7 @@ public:
     float MovementSpeed;
     float MouseSensitivity;
 
-    Camera(Vector3 position = Vector3(0.0f, 1.0f, 50.0f), Vector3 up = Vector3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f);
+    Camera(Vector3 position = Vector3(0.0f, 1.0f, -150.0f), Vector3 up = Vector3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f);
 
     void applyViewMatrix();
 

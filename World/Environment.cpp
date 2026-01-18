@@ -6,7 +6,6 @@ Environment::Environment() {}
 
 void Environment::draw() {
     for (int i = 1; i < 20; i++) {
-        if (i <= 18 || i >= 34) {
             glBindTexture(GL_TEXTURE_2D, m_grassTextureID);
             glEnable(GL_TEXTURE_2D);
             glPushMatrix();
@@ -15,7 +14,6 @@ void Environment::draw() {
             Renderer::drawCube(1.0f, 1.0f, 1.0f, 30); 
             glPopMatrix();
             glDisable(GL_TEXTURE_2D);
-        }
     }
 
     glBindTexture(GL_TEXTURE_2D, m_rockTextureID);
